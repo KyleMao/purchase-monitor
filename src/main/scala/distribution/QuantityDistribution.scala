@@ -8,9 +8,11 @@ package distribution
  */
 abstract class QuantityDistribution extends Distribution {
   
-  protected def getAggreStat(func: String, group: String): Float = {
+  protected def getAggreStat(func: String, group: String): Float =
     super.getAggreStat(func, group, true)
-  }
+
+  protected def getQuantityCnts(group: String) =
+    super.getCnts(group, true)
   
   protected def getAggreStat(func: String): Float
   

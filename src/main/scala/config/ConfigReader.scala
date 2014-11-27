@@ -10,4 +10,15 @@ import com.typesafe.config.ConfigFactory
  */
 class ConfigReader {
   val conf = ConfigFactory.load()
+
+  def getDb = conf.getString("db.dbName")
+
+  def getUser = conf.getString("db.userName")
+
+  def getPwd = conf.getString("db.password")
+
+  def getTbl = conf.getString("db.tblName")
+
+  def getGraphDir =
+    conf.getString("result.graphDir")
 }

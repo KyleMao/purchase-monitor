@@ -8,13 +8,18 @@ package distribution
  */
 final class ProductPurchaseDistribution extends PurchaseDistribution {
   
-  protected def getAggreStat(func: String): Float = {
+  protected def getAggreStat(func: String): Float =
     super.getAggreStat(func, "product")
-  }
-  
-  def getMin = getAggreStat("min").asInstanceOf[Int]
-  
-  def getMax = getAggreStat("max").asInstanceOf[Int]
   
   def getAvg = getAggreStat("avg")
+
+  def getMin =
+    getAggreStat("min").asInstanceOf[Int]
+  
+  def getMax =
+    getAggreStat("max").asInstanceOf[Int]
+
+  def getPurchaseCnts =
+    super.getPurchaseCnts("product")
+
 }

@@ -7,10 +7,12 @@ package distribution
  */
 abstract class PurchaseDistribution extends Distribution {
   
-  protected def getAggreStat(func: String, group: String): Float = {
+  protected def getAggreStat(func: String, group: String): Float =
     super.getAggreStat(func, group, false)
-  }
+
+  protected def getPurchaseCnts(group: String) =
+    super.getCnts(group, false)
   
   protected def getAggreStat(func: String): Float
-  
+
 }

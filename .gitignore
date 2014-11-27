@@ -19,3 +19,6 @@ project/plugins/project/
 
 # OS X
 .DS_Store
+
+# Project specific
+src/main/scala/Test.scala
