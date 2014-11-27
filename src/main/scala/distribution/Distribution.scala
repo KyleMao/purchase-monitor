@@ -2,6 +2,9 @@ package distribution
 
 import scala.collection.mutable.ArrayBuffer
 
+import breeze.linalg._
+import nak.cluster._
+
 import config.ConfigReader
 import db.DbManager
 
@@ -54,9 +57,17 @@ abstract class Distribution {
     buf.toArray
   }
 
-  protected def getAggreStat(func: String, group: String): Float
-
-  protected def getCnts(group: String): Array[Double]
+  protected def getKmeansRange(group: String, isQuant: Boolean) = {
+    val cnts = getCnts(group, isQuant)
+    val fea = for (cnt <- cnts) yield Vector(cnt)
+    val kmeans = new Kmeans[Vector[Double]](
+      fea,
+      Kmeans.euclideanDistance
+    )
+    val (dispsersion, cents) = kmeans.run(3, 10)
+    val (distances, pred) = kmeans.computeClusterMemberships(cents)
+    pred.foreach(println)
+  }
 
   def getAvg: Float
 
@@ -67,5 +78,7 @@ abstract class Distribution {
   def getDistinctNum: Int
 
   def getCnts: Array[Double]
+
+  def getKmeansRange
 
 }

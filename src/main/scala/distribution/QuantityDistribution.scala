@@ -13,7 +13,8 @@ abstract class QuantityDistribution extends Distribution {
 
   protected def getCnts(group: String): Array[Double] =
     super.getCnts(group, true)
-  
-  protected def getAggreStat(func: String): Float
+
+  protected def getKmeansRange(group: String) =
+    super.getKmeansRange(group, true)
   
 }

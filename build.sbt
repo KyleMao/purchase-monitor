@@ -7,6 +7,7 @@ lazy val root = (project in file(".")).
         "com.typesafe" % "config" % "1.2.1",
         "org.scalanlp" % "breeze_2.10" % "0.10",
         "org.scalanlp" % "breeze-natives_2.10" % "0.10",
-        "org.scalanlp" % "breeze-viz_2.10" % "0.9"
+        "org.scalanlp" % "breeze-viz_2.10" % "0.9",
+        "org.scalanlp" % "nak_2.10" % "1.3"
     )
   )

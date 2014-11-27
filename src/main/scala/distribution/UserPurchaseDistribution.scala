@@ -8,7 +8,7 @@ package distribution
  */
 final class UserPurchaseDistribution extends PurchaseDistribution {
   
-  protected def getAggreStat(func: String): Float =
+  private def getAggreStat(func: String): Float =
     super.getAggreStat(func, "user_id")
   
   def getAvg: Float = getAggreStat("avg")
@@ -24,5 +24,8 @@ final class UserPurchaseDistribution extends PurchaseDistribution {
   
   def getDistinctNum: Int =
     super.getDistinctNum("user_id")
+
+  def getKmeansRange =
+    super.getKmeansRange("user_id")
 
 }
