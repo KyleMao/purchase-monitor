@@ -28,8 +28,6 @@ abstract class Distribution {
     res.next
     res.getFloat(func)
   }
-  
-  protected def getAggreStat(func: String, group: String): Float
 
   protected def getDistinctNum(group: String) = {
     val cr = new ConfigReader
@@ -55,4 +53,19 @@ abstract class Distribution {
     }
     buf.toArray
   }
+
+  protected def getAggreStat(func: String, group: String): Float
+
+  protected def getCnts(group: String): Array[Double]
+
+  def getAvg: Float
+
+  def getMin: Int
+
+  def getMax: Int
+
+  def getDistinctNum: Int
+
+  def getCnts: Array[Double]
+
 }

@@ -11,18 +11,18 @@ final class UserPurchaseDistribution extends PurchaseDistribution {
   protected def getAggreStat(func: String): Float =
     super.getAggreStat(func, "user_id")
   
-  def getAvg = getAggreStat("avg")
+  def getAvg: Float = getAggreStat("avg")
 
-  def getMin =
+  def getMin: Int =
     getAggreStat("min").asInstanceOf[Int]
   
-  def getMax =
+  def getMax: Int =
     getAggreStat("max").asInstanceOf[Int]
 
-  def getDistinctNum =
+  def getCnts: Array[Double] =
+    super.getCnts("user_id")
+  
+  def getDistinctNum: Int =
     super.getDistinctNum("user_id")
 
-  def getPurchaseCnts =
-    super.getPurchaseCnts("user_id")
-  
 }

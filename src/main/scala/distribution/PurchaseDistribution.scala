@@ -10,7 +10,7 @@ abstract class PurchaseDistribution extends Distribution {
   protected def getAggreStat(func: String, group: String): Float =
     super.getAggreStat(func, group, false)
 
-  protected def getPurchaseCnts(group: String) =
+  protected def getCnts(group: String): Array[Double] =
     super.getCnts(group, false)
   
   protected def getAggreStat(func: String): Float

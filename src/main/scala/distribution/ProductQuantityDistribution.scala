@@ -8,19 +8,21 @@ package distribution
  */
 final class ProductQuantityDistribution extends QuantityDistribution {
   
-  protected def getAggreStat(func: String): Float = {
+  protected def getAggreStat(func: String): Float =
     super.getAggreStat(func, "product")
-  }
   
-  def getAvg = getAggreStat("avg")
+  def getAvg: Float = getAggreStat("avg")
 
-  def getMin =
+  def getMin: Int =
     getAggreStat("min").asInstanceOf[Int]
   
-  def getMax =
+  def getMax: Int =
     getAggreStat("max").asInstanceOf[Int]
 
-  def getQuantityCnts =
-    super.getQuantityCnts("product")
+  def getCnts: Array[Double] =
+    super.getCnts("product")
+
+  def getDistinctNum: Int =
+    super.getDistinctNum("product")
 
 }
