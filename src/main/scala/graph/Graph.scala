@@ -1,11 +1,49 @@
 package graph
 
+import breeze.linalg._
+import breeze.plot._
+
+import config.ConfigReader
+import distribution.DistType
+import distribution.DistributionFactory
+
 /**
- * An abstract class that implements the general graph drawing methods.
+ * An class that implements the graph drawing methods.
  * 
  * @author Zexi Mao
  *
  */
-abstract class Graph {
+class Graph {
+  
+  def plotDist(t: DistType.Value) = {
+    val cr = new ConfigReader
+    val gd = cr.getGraphDir
+    val df = new DistributionFactory
+    val dist = df.createDist(t)
+    val cnts = dist.getCnts
+    val x = linspace(1, cnts.length, cnts.length)
+    val y = new DenseVector(cnts)
+    val f = Figure()
+    val p = f.subplot(0)
+    p += plot(x, y)
+
+    t match {
+      case DistType.ProdPur => {
+        p.xlabel = "Product"
+        p.ylabel = "# of purchases"
+        f.saveas(gd + "product_purchase.png")
+      }
+      case DistType.ProdQuant => {
+        p.xlabel = "Product"
+        p.ylabel = "Quantities purchased"
+        f.saveas(gd + "product_quantity.png")
+      }
+      case DistType.UserPur => {
+        p.xlabel = "User"
+        p.ylabel = "# of purchases"
+        f.saveas(gd + "user_purchase.png")
+      }
+    }
+  }
   
 }
