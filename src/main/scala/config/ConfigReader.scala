@@ -21,4 +21,7 @@ class ConfigReader {
 
   def getGraphDir =
     conf.getString("result.graphDir")
+
+  def getNCluster = 
+    conf.getInt("cluster.numCluster")
 }

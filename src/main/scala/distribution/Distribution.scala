@@ -15,14 +15,10 @@ import db.DbManager
  *
  */
 abstract class Distribution {
-  
-  private def sumType(isQuant: Boolean) =
-    if (isQuant) "sum(quantity)" else "count(*)"
 
   protected def getAggreStat(func: String, group: String, isQuant: Boolean): Float = {
-    val sum = sumType(isQuant)
-    val cr = new ConfigReader
-    val tbl = cr.getTbl
+    val sum = getSumType(isQuant)
+    val tbl = getTbl
     val dbm = new DbManager
     val query = s"""SELECT $func(g_sum) FROM
       (SELECT $group, $sum AS g_sum FROM $tbl GROUP BY $group)
@@ -33,8 +29,7 @@ abstract class Distribution {
   }
 
   protected def getDistinctNum(group: String) = {
-    val cr = new ConfigReader
-    val tbl = cr.getTbl
+    val tbl = getTbl
     val dbm = new DbManager
     val query = s"SELECT COUNT(DISTINCT $group) as d_num FROM $tbl;"
     val res = dbm.executeQuery(query)
@@ -43,9 +38,8 @@ abstract class Distribution {
   }
 
   protected def getCnts(group: String, isQuant: Boolean) = {
-    val sum = sumType(isQuant)
-    val cr = new ConfigReader
-    val tbl = cr.getTbl
+    val sum = getSumType(isQuant)
+    val tbl = getTbl
     val dbm = new DbManager
     val query = s"""SELECT $group, $sum AS g_sum FROM $tbl
       GROUP BY $group ORDER BY g_sum DESC;"""
@@ -57,16 +51,46 @@ abstract class Distribution {
     buf.toArray
   }
 
-  protected def getKmeansRange(group: String, isQuant: Boolean) = {
+  protected def getKmeansRange(group: String, isQuant: Boolean):
+    (Array[Int], Array[Int]) = {
+    val cr = new ConfigReader
+    val nCluster = cr.getNCluster
+    getKmeansRange(group, isQuant, nCluster)
+  }
+
+  protected def getKmeansRange(group: String, isQuant: Boolean, nCluster: Int):
+    (Array[Int], Array[Int]) = {
+    
     val cnts = getCnts(group, isQuant)
     val fea = for (cnt <- cnts) yield Vector(cnt)
     val kmeans = new Kmeans[Vector[Double]](
       fea,
       Kmeans.euclideanDistance
     )
-    val (dispsersion, cents) = kmeans.run(3, 10)
-    val (distances, pred) = kmeans.computeClusterMemberships(cents)
-    pred.foreach(println)
+    val (dispsersion, cents) = kmeans.run(nCluster, 20)
+    val (distances, preds) = kmeans.computeClusterMemberships(cents)
+    val bins = Array.fill[Int](nCluster+1)(0)
+    val size = Array.fill[Int](nCluster)(0)
+    var bin = -1
+    var prev = -1
+    for ((pred,i) <- preds.view.zipWithIndex.reverseIterator) {
+      if (pred != prev) {
+        prev = pred
+        bin += 1
+        bins(bin) = cnts(i).asInstanceOf[Int]
+      }
+      size(bin) += 1
+    }
+    bins(bin+1) = cnts(0).asInstanceOf[Int]
+    (bins, size)
+  }
+
+  private def getSumType(isQuant: Boolean) =
+    if (isQuant) "sum(quantity)" else "count(*)"
+
+  private def getTbl = {
+    val cr = new ConfigReader
+    cr.getTbl
   }
 
   def getAvg: Float
@@ -79,6 +103,8 @@ abstract class Distribution {
 
   def getCnts: Array[Double]
 
-  def getKmeansRange
+  def getKmeansRange: (Array[Int], Array[Int])
+
+  def getKmeansRange(nCluster: Int): (Array[Int], Array[Int])
 
 }

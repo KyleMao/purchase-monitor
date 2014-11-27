@@ -14,12 +14,10 @@ import distribution.DistributionFactory
  *
  */
 class Graph {
-  
+
   def plotDist(t: DistType.Value) = {
-    val cr = new ConfigReader
-    val gd = cr.getGraphDir
-    val df = new DistributionFactory
-    val dist = df.createDist(t)
+    val gd = getGraphDir
+    val dist = getDist(t)
     val cnts = dist.getCnts
     val x = linspace(1, cnts.length, cnts.length)
     val y = new DenseVector(cnts)
@@ -44,6 +42,22 @@ class Graph {
         f.saveas(gd + "user_purchase.png")
       }
     }
+  }
+
+  def clusterHist(t: DistType.Value) = {
+    val gd = getGraphDir
+    val dist = getDist(t)
+  }
+
+  
+  private def getDist(t: DistType.Value) = {
+    val df = new DistributionFactory
+    df.createDist(t)
+  }  
+
+  private def getGraphDir() = {
+    val cr = new ConfigReader
+    cr.getGraphDir
   }
   
 }

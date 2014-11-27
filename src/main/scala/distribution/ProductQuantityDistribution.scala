@@ -25,7 +25,10 @@ final class ProductQuantityDistribution extends QuantityDistribution {
   def getDistinctNum: Int =
     super.getDistinctNum("product")
 
-  def getKmeansRange =
+  def getKmeansRange: (Array[Int], Array[Int]) =
     super.getKmeansRange("product")
+
+  def getKmeansRange(nCluster: Int): (Array[Int], Array[Int]) =
+    super.getKmeansRange("product", nCluster)
 
 }

@@ -14,7 +14,12 @@ abstract class QuantityDistribution extends Distribution {
   protected def getCnts(group: String): Array[Double] =
     super.getCnts(group, true)
 
-  protected def getKmeansRange(group: String) =
+  protected def getKmeansRange(group: String): (Array[Int], Array[Int]) =
     super.getKmeansRange(group, true)
+
+  protected def getKmeansRange(group: String, nCluster: Int):
+    (Array[Int], Array[Int]) = {
+    super.getKmeansRange(group, true, nCluster)
+  }
   
 }

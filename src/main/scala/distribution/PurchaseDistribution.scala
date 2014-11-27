@@ -13,7 +13,12 @@ abstract class PurchaseDistribution extends Distribution {
   protected def getCnts(group: String): Array[Double] =
     super.getCnts(group, false)
 
-  protected def getKmeansRange(group: String) =
+  protected def getKmeansRange(group: String): (Array[Int], Array[Int]) =
     super.getKmeansRange(group, false)
+
+  protected def getKmeansRange(group: String, nCluster: Int):
+    (Array[Int], Array[Int]) = {
+    super.getKmeansRange(group, false, nCluster)
+  }
 
 }

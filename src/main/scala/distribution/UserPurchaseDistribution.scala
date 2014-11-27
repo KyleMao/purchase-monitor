@@ -25,7 +25,10 @@ final class UserPurchaseDistribution extends PurchaseDistribution {
   def getDistinctNum: Int =
     super.getDistinctNum("user_id")
 
-  def getKmeansRange =
+  def getKmeansRange: (Array[Int], Array[Int]) =
     super.getKmeansRange("user_id")
+
+  def getKmeansRange(nCluster: Int): (Array[Int], Array[Int]) =
+    super.getKmeansRange("user_id", nCluster)
 
 }
