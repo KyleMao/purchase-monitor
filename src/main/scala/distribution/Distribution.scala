@@ -70,7 +70,7 @@ abstract class Distribution {
     val (dispsersion, cents) = kmeans.run(nCluster, 20)
     val (distances, preds) = kmeans.computeClusterMemberships(cents)
     val bins = Array.fill[Int](nCluster+1)(0)
-    val size = Array.fill[Int](nCluster)(0)
+    val sizes = Array.fill[Int](nCluster)(0)
     var bin = -1
     var prev = -1
     for ((pred,i) <- preds.view.zipWithIndex.reverseIterator) {
@@ -79,10 +79,10 @@ abstract class Distribution {
         bin += 1
         bins(bin) = cnts(i).asInstanceOf[Int]
       }
-      size(bin) += 1
+      sizes(bin) += 1
     }
     bins(bin+1) = cnts(0).asInstanceOf[Int]
-    (bins, size)
+    (bins, sizes)
   }
 
   private def getSumType(isQuant: Boolean) =
