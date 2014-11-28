@@ -6,8 +6,8 @@ import breeze.linalg._
 import breeze.plot._
 
 import config.ConfigReader
-import distribution.DistType
 import distribution.DistributionFactory
+import distribution.DistType
 
 /**
  * An class that implements the graph drawing methods.

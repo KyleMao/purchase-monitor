@@ -31,4 +31,7 @@ final class UserPurchaseDistribution extends PurchaseDistribution {
   def getKmeansRange(nCluster: Int): (Array[Int], Array[Int]) =
     super.getKmeansRange("user_id", nCluster)
 
+  def getWeeklyHistory(id: String) = 
+    super.getWeeklyHistory(id, "product")
+
 }

@@ -7,6 +7,7 @@ import nak.cluster._
 
 import config.ConfigReader
 import db.DbManager
+import time.TimeManager
 
 /**
  * An abstract class that implements the general distribution methods.
@@ -73,6 +74,7 @@ abstract class Distribution {
     val sizes = Array.fill[Int](nCluster)(0)
     var bin = -1
     var prev = -1
+    
     for ((pred,i) <- preds.view.zipWithIndex.reverseIterator) {
       if (pred != prev) {
         prev = pred
@@ -83,6 +85,30 @@ abstract class Distribution {
     }
     bins(bin+1) = cnts(0).asInstanceOf[Int]
     (bins, sizes)
+  }
+
+  protected def getWeeklyHistory(id: String, group: String, isQuant: Boolean) = {
+    val sum = getSumType(isQuant)
+    val tbl = getTbl
+    val dbm = new DbManager
+    val tm = new TimeManager
+    val query = s"""SELECT $group, date_trunc('week', time) as week,
+      $sum as g_sum FROM order_history WHERE $group='$id' GROUP BY $group, week
+      ORDER BY week;"""
+    val res = dbm.executeQuery(query)
+    val measure = ArrayBuffer.empty[Int]
+    var preWeek = tm.getDayAfter(tm.getDbStartTime, -7)
+    
+    while (res.next) {
+      val week = tm.getTime(res.getString("week"))
+      while (tm.dateDiff(preWeek, week) > 7) {
+        measure += 0
+        preWeek = tm.getDayAfter(preWeek, 7)
+      }
+      measure += res.getInt("g_sum")
+      preWeek = week
+    }
+    measure.toArray
   }
 
   private def getSumType(isQuant: Boolean) =
@@ -106,5 +132,7 @@ abstract class Distribution {
   def getKmeansRange: (Array[Int], Array[Int])
 
   def getKmeansRange(nCluster: Int): (Array[Int], Array[Int])
+
+  def getWeeklyHistory(id: String): Array[Int]
 
 }

@@ -19,6 +19,9 @@ class ConfigReader {
 
   def getTbl = conf.getString("db.tblName")
 
+  def getDbStartTime =
+    conf.getString("db.startTime")
+
   def getGraphDir =
     conf.getString("result.graphDir")
 

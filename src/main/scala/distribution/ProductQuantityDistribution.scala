@@ -31,4 +31,7 @@ final class ProductQuantityDistribution extends QuantityDistribution {
   def getKmeansRange(nCluster: Int): (Array[Int], Array[Int]) =
     super.getKmeansRange("product", nCluster)
 
+  def getWeeklyHistory(id: String) = 
+    super.getWeeklyHistory(id, "product")
+
 }

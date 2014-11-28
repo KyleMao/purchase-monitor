@@ -1,4 +1,5 @@
 package distribution
+
 /**
  * An abstract class dealing with the distribution of purchases.
  * 
@@ -20,5 +21,8 @@ abstract class PurchaseDistribution extends Distribution {
     (Array[Int], Array[Int]) = {
     super.getKmeansRange(group, false, nCluster)
   }
+
+  protected def getWeeklyHistory(id: String, group: String) =
+    super.getWeeklyHistory(id, group, false)
 
 }
