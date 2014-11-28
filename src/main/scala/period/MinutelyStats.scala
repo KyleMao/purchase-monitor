@@ -4,12 +4,12 @@ import types.AggreType
 import types.PeriodType
 
 /**
- * A class that gets the daily purchase stats.
+ * A class that gets the minutely purchase stats.
  * 
  * @author Zexi Mao
  *
  */
-class DailyStats extends PeriodStats {
+class MinutelyStats extends PeriodStats {
 
   def getAvg: Float =
     getAggreStat(AggreType.Avg)
@@ -21,9 +21,9 @@ class DailyStats extends PeriodStats {
     getAggreStat(AggreType.Max).asInstanceOf[Int]
 
   def getAllHistory: Array[Double] =
-    super.getAllHistory(PeriodType.Day)
+    super.getAllHistory(PeriodType.Min)
 
   private def getAggreStat(agt: AggreType.Value): Float =
-    super.getAggreStat(agt, PeriodType.Day)
+    super.getAggreStat(agt, PeriodType.Min)
 
 }

@@ -3,6 +3,7 @@ package utils
 import types.AggreType
 import types.AmountType
 import types.ObjType
+import types.PeriodType
 
 /**
  * An object that holds the miscellaneous utility methods.
@@ -21,6 +22,15 @@ object Utils {
   def groupStr(ot: ObjType.Value) = ot match {
     case ObjType.Product => "product"
     case ObjType.User => "user_id"
+  }
+
+  def periodStr(pt: PeriodType.Value) = pt match {
+    case PeriodType.Min => "min"
+    case PeriodType.Hour => "hour"
+    case PeriodType.Day => "day"
+    case PeriodType.Week => "week"
+    case PeriodType.Month => "mon"
+    case PeriodType.Year => "year"
   }
 
   def sumStr(amt: AmountType.Value) = amt match {
