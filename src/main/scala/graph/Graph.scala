@@ -83,7 +83,7 @@ class Graph {
     p += hist(dh, 16)
     p.xlabel = "# of purchases"
     p.ylabel = "# of days"
-    p.title = "Daily perchase distribution"
+    p.title = "Daily Purchase Distribution"
     f.saveas(gd + "daily_distribution.png")
   }
 
