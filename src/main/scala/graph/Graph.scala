@@ -20,9 +20,8 @@ class Graph {
   def plotDist(t: DistType.Value) = {
     val gd = getGraphDir
     val dist = getDist(t)
-    val cnts = dist.getCnts
-    val x = linspace(1, cnts.length, cnts.length)
-    val y = new DenseVector(cnts)
+    val y = dist.getCnts
+    val x = linspace(1, y.length, y.length)
     val f = Figure()
     val p = f.subplot(0)
     p += plot(x, y)
@@ -42,6 +41,35 @@ class Graph {
         p.xlabel = "User"
         p.ylabel = "# of purchases"
         f.saveas(gd + "user_purchase.png")
+      }
+    }
+  }
+
+  def plotHistory(t: DistType.Value, id: String) = {
+    val gd = getGraphDir
+    val dist = getDist(t)
+    val y = dist.getWeeklyHistory(id)
+    val x = linspace(1, y.length, y.length)
+    val f = Figure()
+    val p = f.subplot(0)
+    p += plot(x, y)
+
+    p.xlabel = "Week"
+    t match {
+      case DistType.ProdPur => {
+        p.ylabel = "# of purchases"
+        p.title = "Product " + id
+        f.saveas(gd + "product_" + id + "_purchase.png")
+      }
+      case DistType.ProdQuant => {
+        p.ylabel = "Quantities purchased"
+        p.title = "Product " + id
+        f.saveas(gd + "product_" + id + "_quantity.png")
+      }
+      case DistType.UserPur => {
+        p.ylabel = "# of purchases"
+        p.title = "User " + id
+        f.saveas(gd + "user_" + id + "_purchase.png")
       }
     }
   }

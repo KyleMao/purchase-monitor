@@ -22,7 +22,7 @@ abstract class PurchaseDistribution extends Distribution {
     super.getKmeansRange(group, false, nCluster)
   }
 
-  protected def getWeeklyHistory(id: String, group: String) =
+  protected def getWeeklyHistory(id: String, group: String): Array[Double] =
     super.getWeeklyHistory(id, group, false)
 
 }

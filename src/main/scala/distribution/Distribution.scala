@@ -87,7 +87,9 @@ abstract class Distribution {
     (bins, sizes)
   }
 
-  protected def getWeeklyHistory(id: String, group: String, isQuant: Boolean) = {
+  protected def getWeeklyHistory(id: String, group: String, isQuant: Boolean):
+    Array[Double] = {
+
     val sum = getSumType(isQuant)
     val tbl = getTbl
     val dbm = new DbManager
@@ -96,7 +98,7 @@ abstract class Distribution {
       $sum as g_sum FROM order_history WHERE $group='$id' GROUP BY $group, week
       ORDER BY week;"""
     val res = dbm.executeQuery(query)
-    val measure = ArrayBuffer.empty[Int]
+    val measure = ArrayBuffer.empty[Double]
     var preWeek = tm.getDayAfter(tm.getDbStartTime, -7)
     
     while (res.next) {
@@ -107,6 +109,10 @@ abstract class Distribution {
       }
       measure += res.getInt("g_sum")
       preWeek = week
+    }
+    while (tm.dateDiff(preWeek, tm.getLatestPur) > 7) {
+      measure += 0
+      preWeek = tm.getDayAfter(preWeek, 7)
     }
     measure.toArray
   }
@@ -133,6 +139,6 @@ abstract class Distribution {
 
   def getKmeansRange(nCluster: Int): (Array[Int], Array[Int])
 
-  def getWeeklyHistory(id: String): Array[Int]
+  def getWeeklyHistory(id: String): Array[Double]
 
 }

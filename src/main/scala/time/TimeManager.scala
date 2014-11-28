@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 import config.ConfigReader
+import db.DbManager
 
 /**
  * A class for dealing with time such as parsing and comparing.
@@ -19,6 +20,14 @@ class TimeManager {
   def getDbStartTime = {
     val cr = new ConfigReader
     getTime(cr.getDbStartTime)
+  }
+
+  def getLatestPur = {
+    val dbm = new DbManager
+    val query = "SELECT max(time) as late FROM order_history;"
+    val res = dbm.executeQuery(query)
+    res.next
+    getTime(res.getString("late"))
   }
 
   def getDayAfter(d: Date, n: Int) =
