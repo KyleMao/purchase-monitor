@@ -1,10 +1,7 @@
-package time
+package utils
 
 import java.text.SimpleDateFormat
 import java.util.Date
-
-import config.ConfigReader
-import db.DbManager
 
 /**
  * A class for dealing with time such as parsing and comparing.
@@ -30,8 +27,15 @@ class TimeManager {
     getTime(res.getString("late"))
   }
 
+  def getPrevWeek(d: Date) = getDayAfter(d, -7)
+
+  def getNextWeek(d: Date) = getDayAfter(d, 7)
+
   def getDayAfter(d: Date, n: Int) =
     new Date(d.getTime + n * msPerDay)
+
+  def weekDiff(d1: Date, d2: Date) =
+    dateDiff(d1, d2) / 7
 
   def dateDiff(d1: Date, d2: Date) =
     (d2.getTime - d1.getTime) / msPerDay

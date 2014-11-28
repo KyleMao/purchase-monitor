@@ -5,9 +5,13 @@ import scala.collection.mutable.ArrayBuffer
 import breeze.linalg._
 import nak.cluster._
 
-import config.ConfigReader
-import db.DbManager
-import time.TimeManager
+import types.AggreType
+import types.AmountType
+import types.ObjType
+import utils.ConfigReader
+import utils.DbManager
+import utils.TimeManager
+import utils.Utils
 
 /**
  * An abstract class that implements the general distribution methods.
@@ -20,8 +24,12 @@ abstract class Distribution {
   private val cr = new ConfigReader
   private val tbl = cr.getTbl
 
-  protected def getAggreStat(func: String, group: String, isQuant: Boolean): Float = {
-    val sum = getSumType(isQuant)
+  protected def getAggreStat(agt: AggreType.Value, ot: ObjType.Value,
+    amt: AmountType.Value): Float = {
+
+    val func = Utils.funcStr(agt)
+    val group = Utils.groupStr(ot)
+    val sum = Utils.sumStr(amt)
     val query = s"""SELECT $func(g_sum) FROM
       (SELECT $group, $sum AS g_sum FROM $tbl GROUP BY $group)
       AS group_count;"""
@@ -30,15 +38,17 @@ abstract class Distribution {
     res.getFloat(func)
   }
 
-  protected def getDistinctNum(group: String) = {
-    val query = s"SELECT COUNT(DISTINCT $group) as d_num FROM $tbl;"
+  protected def getDistinctNum(ot: ObjType.Value) = {
+    val group = Utils.groupStr(ot)
+    val query = s"SELECT count(distinct $group) as d_num FROM $tbl;"
     val res = dbm.executeQuery(query)
     res.next
     res.getInt("d_num")
   }
 
-  protected def getCnts(group: String, isQuant: Boolean) = {
-    val sum = getSumType(isQuant)
+  protected def getCnts(ot: ObjType.Value, amt: AmountType.Value) = {
+    val group = Utils.groupStr(ot)
+    val sum = Utils.sumStr(amt)
     val query = s"""SELECT $group, $sum AS g_sum FROM $tbl
       GROUP BY $group ORDER BY g_sum DESC;"""
     val res = dbm.executeQuery(query)
@@ -49,17 +59,17 @@ abstract class Distribution {
     buf.toArray
   }
 
-  protected def getKmeansRange(group: String, isQuant: Boolean):
+  protected def getKmeansRange(ot: ObjType.Value, amt: AmountType.Value):
     (Array[Int], Array[Int]) = {
     val cr = new ConfigReader
     val nCluster = cr.getNCluster
-    getKmeansRange(group, isQuant, nCluster)
+    getKmeansRange(ot, amt, nCluster)
   }
 
-  protected def getKmeansRange(group: String, isQuant: Boolean, nCluster: Int):
-    (Array[Int], Array[Int]) = {
+  protected def getKmeansRange(ot: ObjType.Value, amt: AmountType.Value,
+    nCluster: Int): (Array[Int], Array[Int]) = {
     
-    val cnts = getCnts(group, isQuant)
+    val cnts = getCnts(ot, amt)
     val fea = for (cnt <- cnts) yield Vector(cnt)
     val kmeans = new Kmeans[Vector[Double]](
       fea,
@@ -84,36 +94,34 @@ abstract class Distribution {
     (bins, sizes)
   }
 
-  protected def getWeeklyHistory(id: String, group: String, isQuant: Boolean):
-    Array[Double] = {
+  protected def getWeeklyHistory(id: String, ot: ObjType.Value,
+    amt: AmountType.Value): Array[Double] = {
 
-    val sum = getSumType(isQuant)
+    val group = Utils.groupStr(ot)
+    val sum = Utils.sumStr(amt)
     val tm = new TimeManager
     val query = s"""SELECT $group, date_trunc('week', time) as week,
-      $sum as g_sum FROM order_history WHERE $group='$id' GROUP BY $group, week
+      $sum as g_sum FROM $tbl WHERE $group='$id' GROUP BY $group, week
       ORDER BY week;"""
     val res = dbm.executeQuery(query)
-    val measure = ArrayBuffer.empty[Double]
-    var preWeek = tm.getDayAfter(tm.getDbStartTime, -7)
+    val amount = ArrayBuffer.empty[Double]
+    var preWeek = tm.getPrevWeek(tm.getDbStartTime)
     
     while (res.next) {
       val week = tm.getTime(res.getString("week"))
-      while (tm.dateDiff(preWeek, week) > 7) {
-        measure += 0
-        preWeek = tm.getDayAfter(preWeek, 7)
+      while (tm.weekDiff(preWeek, week) > 1) {
+        amount += 0
+        preWeek = tm.getNextWeek(preWeek)
       }
-      measure += res.getInt("g_sum")
+      amount += res.getInt("g_sum")
       preWeek = week
     }
-    while (tm.dateDiff(preWeek, tm.getLatestPur) > 7) {
-      measure += 0
-      preWeek = tm.getDayAfter(preWeek, 7)
+    while (tm.weekDiff(preWeek, tm.getLatestPur) > 1) {
+      amount += 0
+      preWeek = tm.getNextWeek(preWeek)
     }
-    measure.toArray
+    amount.toArray
   }
-
-  private def getSumType(isQuant: Boolean) =
-    if (isQuant) "sum(quantity)" else "count(*)"
 
   def getAvg: Float
 

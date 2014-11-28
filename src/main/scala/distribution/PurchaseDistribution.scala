@@ -1,5 +1,9 @@
 package distribution
 
+import types.AggreType
+import types.AmountType
+import types.ObjType
+
 /**
  * An abstract class dealing with the distribution of purchases.
  * 
@@ -8,21 +12,21 @@ package distribution
  */
 abstract class PurchaseDistribution extends Distribution {
   
-  protected def getAggreStat(func: String, group: String): Float =
-    super.getAggreStat(func, group, false)
+  protected def getAggreStat(agt: AggreType.Value, ot: ObjType.Value): Float =
+    super.getAggreStat(agt, ot, AmountType.Purchase)
 
-  protected def getCnts(group: String): Array[Double] =
-    super.getCnts(group, false)
+  protected def getCnts(ot: ObjType.Value): Array[Double] =
+    super.getCnts(ot, AmountType.Purchase)
 
-  protected def getKmeansRange(group: String): (Array[Int], Array[Int]) =
-    super.getKmeansRange(group, false)
+  protected def getKmeansRange(ot: ObjType.Value): (Array[Int], Array[Int]) =
+    super.getKmeansRange(ot, AmountType.Purchase)
 
-  protected def getKmeansRange(group: String, nCluster: Int):
+  protected def getKmeansRange(ot: ObjType.Value, nCluster: Int):
     (Array[Int], Array[Int]) = {
-    super.getKmeansRange(group, false, nCluster)
+    super.getKmeansRange(ot, AmountType.Purchase, nCluster)
   }
 
-  protected def getWeeklyHistory(id: String, group: String): Array[Double] =
-    super.getWeeklyHistory(id, group, false)
+  protected def getWeeklyHistory(id: String, ot: ObjType.Value): Array[Double] =
+    super.getWeeklyHistory(id, ot, AmountType.Purchase)
 
 }

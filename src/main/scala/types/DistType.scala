@@ -1,4 +1,4 @@
-package distribution
+package types
 
 /**
  * An enumeration of types of distributions we would like to access.

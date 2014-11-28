@@ -5,10 +5,10 @@ import scala.collection.mutable.ArrayBuffer
 import breeze.linalg._
 import breeze.plot._
 
-import config.ConfigReader
-import daily.DailyStats
+import utils.ConfigReader
 import distribution.DistributionFactory
-import distribution.DistType
+import period.DailyStats
+import types.DistType
 
 /**
  * An class that implements the graph drawing methods.

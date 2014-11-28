@@ -1,12 +1,12 @@
-package daily
+package period
 
 import scala.collection.mutable.ArrayBuffer
 
-import config.ConfigReader
-import db.DbManager
+import utils.ConfigReader
+import utils.DbManager
 
 /**
- * An class that gets the daily purchase stats.
+ * A class that gets the daily purchase stats.
  * 
  * @author Zexi Mao
  *

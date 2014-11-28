@@ -1,4 +1,7 @@
 package distribution
+
+import types.DistType
+
 /**
  * A factory that creates the distribution objects
  * 
@@ -7,12 +10,10 @@ package distribution
  */
 class DistributionFactory {
     
-  def createDist(t: DistType.Value) = {
-    t match {
-      case DistType.ProdPur  => new ProductPurchaseDistribution
-      case DistType.ProdQuant => new ProductQuantityDistribution
-      case DistType.UserPur  => new UserPurchaseDistribution
-    }
+  def createDist(t: DistType.Value) = t match {
+    case DistType.ProdPur  => new ProductPurchaseDistribution
+    case DistType.ProdQuant => new ProductQuantityDistribution
+    case DistType.UserPur  => new UserPurchaseDistribution
   }
   
 }

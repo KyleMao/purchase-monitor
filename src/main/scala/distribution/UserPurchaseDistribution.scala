@@ -1,5 +1,8 @@
 package distribution
 
+import types.AggreType
+import types.ObjType
+
 /**
  * A class for getting the distribution of number purchases of users.
  * 
@@ -8,30 +11,31 @@ package distribution
  */
 final class UserPurchaseDistribution extends PurchaseDistribution {
   
-  def getAvg: Float = getAggreStat("avg")
+  def getAvg: Float =
+    getAggreStat(AggreType.Avg)
+
+  def getMax: Int =
+    getAggreStat(AggreType.Max).asInstanceOf[Int]
 
   def getMin: Int =
-    getAggreStat("min").asInstanceOf[Int]
-  
-  def getMax: Int =
-    getAggreStat("max").asInstanceOf[Int]
+    getAggreStat(AggreType.Min).asInstanceOf[Int]
 
   def getCnts: Array[Double] =
-    super.getCnts("user_id")
+    super.getCnts(ObjType.User)
   
   def getDistinctNum: Int =
-    super.getDistinctNum("user_id")
+    super.getDistinctNum(ObjType.User)
 
   def getKmeansRange: (Array[Int], Array[Int]) =
-    super.getKmeansRange("user_id")
+    super.getKmeansRange(ObjType.User)
 
   def getKmeansRange(nCluster: Int): (Array[Int], Array[Int]) =
-    super.getKmeansRange("user_id", nCluster)
+    super.getKmeansRange(ObjType.User, nCluster)
 
   def getWeeklyHistory(id: String): Array[Double] = 
-    super.getWeeklyHistory(id, "user_id")
+    super.getWeeklyHistory(id, ObjType.User)
 
-  private def getAggreStat(func: String): Float =
-    super.getAggreStat(func, "user_id")
+  private def getAggreStat(agt: AggreType.Value): Float =
+    super.getAggreStat(agt, ObjType.User)
 
 }

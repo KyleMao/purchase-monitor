@@ -1,8 +1,6 @@
-package db
+package utils
 
 import java.sql.DriverManager
-
-import config.ConfigReader
 
 /**
  * A database manager that deals with the database queries.
