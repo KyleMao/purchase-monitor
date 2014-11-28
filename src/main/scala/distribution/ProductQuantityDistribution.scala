@@ -8,9 +8,6 @@ package distribution
  */
 final class ProductQuantityDistribution extends QuantityDistribution {
   
-  private def getAggreStat(func: String): Float =
-    super.getAggreStat(func, "product")
-  
   def getAvg: Float = getAggreStat("avg")
 
   def getMin: Int =
@@ -33,5 +30,8 @@ final class ProductQuantityDistribution extends QuantityDistribution {
 
   def getWeeklyHistory(id: String): Array[Double] = 
     super.getWeeklyHistory(id, "product")
+
+  private def getAggreStat(func: String): Float =
+    super.getAggreStat(func, "product")
 
 }

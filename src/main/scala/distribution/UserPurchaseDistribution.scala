@@ -8,9 +8,6 @@ package distribution
  */
 final class UserPurchaseDistribution extends PurchaseDistribution {
   
-  private def getAggreStat(func: String): Float =
-    super.getAggreStat(func, "user_id")
-  
   def getAvg: Float = getAggreStat("avg")
 
   def getMin: Int =
@@ -33,5 +30,8 @@ final class UserPurchaseDistribution extends PurchaseDistribution {
 
   def getWeeklyHistory(id: String): Array[Double] = 
     super.getWeeklyHistory(id, "user_id")
+
+  private def getAggreStat(func: String): Float =
+    super.getAggreStat(func, "user_id")
 
 }

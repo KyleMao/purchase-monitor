@@ -16,11 +16,12 @@ import time.TimeManager
  *
  */
 abstract class Distribution {
+  private val dbm = new DbManager
+  private val cr = new ConfigReader
+  private val tbl = cr.getTbl
 
   protected def getAggreStat(func: String, group: String, isQuant: Boolean): Float = {
     val sum = getSumType(isQuant)
-    val tbl = getTbl
-    val dbm = new DbManager
     val query = s"""SELECT $func(g_sum) FROM
       (SELECT $group, $sum AS g_sum FROM $tbl GROUP BY $group)
       AS group_count;"""
@@ -30,8 +31,6 @@ abstract class Distribution {
   }
 
   protected def getDistinctNum(group: String) = {
-    val tbl = getTbl
-    val dbm = new DbManager
     val query = s"SELECT COUNT(DISTINCT $group) as d_num FROM $tbl;"
     val res = dbm.executeQuery(query)
     res.next
@@ -40,8 +39,6 @@ abstract class Distribution {
 
   protected def getCnts(group: String, isQuant: Boolean) = {
     val sum = getSumType(isQuant)
-    val tbl = getTbl
-    val dbm = new DbManager
     val query = s"""SELECT $group, $sum AS g_sum FROM $tbl
       GROUP BY $group ORDER BY g_sum DESC;"""
     val res = dbm.executeQuery(query)
@@ -91,8 +88,6 @@ abstract class Distribution {
     Array[Double] = {
 
     val sum = getSumType(isQuant)
-    val tbl = getTbl
-    val dbm = new DbManager
     val tm = new TimeManager
     val query = s"""SELECT $group, date_trunc('week', time) as week,
       $sum as g_sum FROM order_history WHERE $group='$id' GROUP BY $group, week
@@ -119,11 +114,6 @@ abstract class Distribution {
 
   private def getSumType(isQuant: Boolean) =
     if (isQuant) "sum(quantity)" else "count(*)"
-
-  private def getTbl = {
-    val cr = new ConfigReader
-    cr.getTbl
-  }
 
   def getAvg: Float
 

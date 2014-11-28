@@ -6,6 +6,7 @@ import breeze.linalg._
 import breeze.plot._
 
 import config.ConfigReader
+import daily.DailyStats
 import distribution.DistributionFactory
 import distribution.DistType
 
@@ -16,9 +17,10 @@ import distribution.DistType
  *
  */
 class Graph {
+  val cr = new ConfigReader
+  val gd = cr.getGraphDir
 
   def plotDist(t: DistType.Value) = {
-    val gd = getGraphDir
     val dist = getDist(t)
     val y = dist.getCnts
     val x = linspace(1, y.length, y.length)
@@ -46,7 +48,6 @@ class Graph {
   }
 
   def plotHistory(t: DistType.Value, id: String) = {
-    val gd = getGraphDir
     val dist = getDist(t)
     val y = dist.getWeeklyHistory(id)
     val x = linspace(1, y.length, y.length)
@@ -74,22 +75,31 @@ class Graph {
     }
   }
 
+  def drawDailyHist() = {
+    val ds = new DailyStats
+    val dh = ds.getAllHistory
+    val f = Figure()
+    val p = f.subplot(0)
+    p += hist(dh, 16)
+    p.xlabel = "# of purchases"
+    p.ylabel = "# of days"
+    p.title = "Daily perchase distribution"
+    f.saveas(gd + "daily_distribution.png")
+  }
+
   def drawClusterHist(t: DistType.Value, nCluster: Int) = {
-    val gd = getGraphDir
     val dist = getDist(t)
     val (bins, sizes) = dist.getKmeansRange(nCluster)
     drawHist(t, bins, sizes)
   }
 
   def drawClusterHist(t: DistType.Value) = {
-    val gd = getGraphDir
     val dist = getDist(t)
     val (bins, sizes) = dist.getKmeansRange
     drawHist(t, bins, sizes)
   }
 
   private def drawHist(t: DistType.Value, bins: Array[Int], sizes: Array[Int]) = {
-    val gd = getGraphDir
     val f = Figure()
     val p = f.subplot(0)
     val buf = ArrayBuffer.empty[Int]
@@ -100,14 +110,20 @@ class Graph {
       case DistType.ProdPur => {
         disc ++= "# purchases per product"
         png = gd + "product_purchase_clu.png"
+        p.xlabel = "Product group"
+        p.ylabel = "# of products in group"
       }
       case DistType.ProdQuant => {
         disc ++= "Quantities purchased per product"
         png = gd + "product_quantity_clu.png"
+        p.xlabel = "Product group"
+        p.ylabel = "# of products in group"
       }
       case DistType.UserPur => {
         disc ++= "# purchases per user"
         png = gd + "user_purchase_clu.png"
+        p.xlabel = "User group"
+        p.ylabel = "# of users in group"
       }
     }
 
@@ -125,11 +141,6 @@ class Graph {
   private def getDist(t: DistType.Value) = {
     val df = new DistributionFactory
     df.createDist(t)
-  }  
-
-  private def getGraphDir() = {
-    val cr = new ConfigReader
-    cr.getGraphDir
   }
   
 }
