@@ -13,9 +13,8 @@ import types.PeriodType
  */
 class DailyStats extends PeriodStats {
 
-  def getPurchase(d: Date) = {
+  def getPurchase(d: Date) =
     super.getPeriodPurchase(d, PeriodType.Day)
-  }
 
   def getAvg: Float =
     getAggreStat(AggreType.Avg)

@@ -27,8 +27,11 @@ class ConfigReader {
   def getGraphDir =
     conf.getString("result.graphDir")
 
-  def getNCluster = 
+  def getNCluster =
     conf.getInt("cluster.numCluster")
+
+  def getMinuteUpper =
+    conf.getInt("minuteNum.high")
 
   def getBinNum(t: PeriodType.Value) = {
     val pStr = Utils.periodStr(t)

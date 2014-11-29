@@ -34,15 +34,15 @@ abstract class Distribution {
       (SELECT $group, $sum AS g_sum FROM $tbl GROUP BY $group)
       AS group_count;"""
     val res = dbm.executeQuery(query)
-    res.next
+    res.next()
     res.getFloat(func)
   }
 
   protected def getDistinctNum(ot: ObjType.Value) = {
     val group = Utils.groupStr(ot)
-    val query = s"SELECT count(distinct $group) as d_num FROM $tbl;"
+    val query = s"SELECT count(distinct $group) AS d_num FROM $tbl;"
     val res = dbm.executeQuery(query)
-    res.next
+    res.next()
     res.getInt("d_num")
   }
 
@@ -53,7 +53,7 @@ abstract class Distribution {
       GROUP BY $group ORDER BY g_sum DESC;"""
     val res = dbm.executeQuery(query)
     val buf = ArrayBuffer.empty[Double]
-    while (res.next) {
+    while (res.next()) {
       buf += res.getInt("g_sum")
     }
     buf.toArray
@@ -100,14 +100,14 @@ abstract class Distribution {
     val group = Utils.groupStr(ot)
     val sum = Utils.sumStr(amt)
     val tm = new TimeManager
-    val query = s"""SELECT $group, date_trunc('week', time) as week,
-      $sum as g_sum FROM $tbl WHERE $group='$id' GROUP BY $group, week
+    val query = s"""SELECT $group, date_trunc('week', time) AS week,
+      $sum AS g_sum FROM $tbl WHERE $group='$id' GROUP BY $group, week
       ORDER BY week;"""
     val res = dbm.executeQuery(query)
     val amount = ArrayBuffer.empty[Double]
     var preWeek = tm.getPrevWeek(tm.getDbStartTime)
     
-    while (res.next) {
+    while (res.next()) {
       val week = tm.getTime(res.getString("week"))
       while (tm.weekDiff(preWeek, week) > 1) {
         amount += 0

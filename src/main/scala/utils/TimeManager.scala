@@ -26,7 +26,7 @@ class TimeManager {
     val dbm = new DbManager
     val query = "SELECT max(time) as late FROM order_history;"
     val res = dbm.executeQuery(query)
-    res.next
+    res.next()
     getTime(res.getString("late"))
   }
 
