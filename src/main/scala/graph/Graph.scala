@@ -7,8 +7,9 @@ import breeze.plot._
 
 import utils.ConfigReader
 import distribution.DistributionFactory
-import period.DailyStats
+import period.PeriodFactory
 import types.DistType
+import types.PeriodType
 
 /**
  * An class that implements the graph drawing methods.
@@ -19,6 +20,7 @@ import types.DistType
 class Graph {
   val cr = new ConfigReader
   val gd = cr.getGraphDir
+  val lh = new LabelHelper
 
   def plotDist(t: DistType.Value) = {
     val dist = getDist(t)
@@ -27,24 +29,10 @@ class Graph {
     val f = Figure()
     val p = f.subplot(0)
     p += plot(x, y)
-
-    t match {
-      case DistType.ProdPur => {
-        p.xlabel = "Product"
-        p.ylabel = "# of purchases"
-        f.saveas(gd + "product_purchase.png")
-      }
-      case DistType.ProdQuant => {
-        p.xlabel = "Product"
-        p.ylabel = "Quantities purchased"
-        f.saveas(gd + "product_quantity.png")
-      }
-      case DistType.UserPur => {
-        p.xlabel = "User"
-        p.ylabel = "# of purchases"
-        f.saveas(gd + "user_purchase.png")
-      }
-    }
+    val (xl, yl, sn) = lh.plotDistHelper(t, gd)
+    p.xlabel = xl
+    p.ylabel = yl
+    f.saveas(sn)
   }
 
   def plotHistory(t: DistType.Value, id: String) = {
@@ -54,37 +42,23 @@ class Graph {
     val f = Figure()
     val p = f.subplot(0)
     p += plot(x, y)
-
-    p.xlabel = "Week"
-    t match {
-      case DistType.ProdPur => {
-        p.ylabel = "# of purchases"
-        p.title = "Product " + id
-        f.saveas(gd + "product_" + id + "_purchase.png")
-      }
-      case DistType.ProdQuant => {
-        p.ylabel = "Quantities purchased"
-        p.title = "Product " + id
-        f.saveas(gd + "product_" + id + "_quantity.png")
-      }
-      case DistType.UserPur => {
-        p.ylabel = "# of purchases"
-        p.title = "User " + id
-        f.saveas(gd + "user_" + id + "_purchase.png")
-      }
-    }
+    val (xl, yl, tt, sn) = lh.plotHistoryHelper(t, gd, id)
+    p.xlabel = xl
+    p.ylabel = yl
+    p.title = tt
+    f.saveas(sn)
   }
 
-  def drawDailyHist() = {
-    val ds = new DailyStats
-    val dh = ds.getAllHistory
+  def drawHist(t: PeriodType.Value) = {
+    val ph = getHistory(t)
     val f = Figure()
     val p = f.subplot(0)
-    p += hist(dh, 16)
-    p.xlabel = "# of purchases"
-    p.ylabel = "# of days"
-    p.title = "Daily Purchase Distribution"
-    f.saveas(gd + "daily_distribution.png")
+    p += hist(ph, cr.getBinNum(t))
+    val (xl, yl, tt, sn) = lh.drawPHistHelper(t, gd)
+    p.xlabel = xl
+    p.ylabel = yl
+    p.title = tt
+    f.saveas(sn)
   }
 
   def drawClusterHist(t: DistType.Value, nCluster: Int) = {
@@ -103,29 +77,9 @@ class Graph {
     val f = Figure()
     val p = f.subplot(0)
     val buf = ArrayBuffer.empty[Int]
-    var disc = new StringBuilder
-
-    var png = ""
-    t match {
-      case DistType.ProdPur => {
-        disc ++= "# purchases per product"
-        png = gd + "product_purchase_clu.png"
-        p.xlabel = "Product group"
-        p.ylabel = "# of products in group"
-      }
-      case DistType.ProdQuant => {
-        disc ++= "Quantities purchased per product"
-        png = gd + "product_quantity_clu.png"
-        p.xlabel = "Product group"
-        p.ylabel = "# of products in group"
-      }
-      case DistType.UserPur => {
-        disc ++= "# purchases per user"
-        png = gd + "user_purchase_clu.png"
-        p.xlabel = "User group"
-        p.ylabel = "# of users in group"
-      }
-    }
+    val disc = new StringBuilder
+    val (xl, yl, tt, sn) = lh.drawHistHelper(t, gd)
+    disc ++= tt
 
     for ((size, i) <- sizes.view.zipWithIndex) {
       buf ++= Array.fill[Int](size)(i+1)
@@ -134,13 +88,21 @@ class Graph {
       disc ++= s"  $low-$high: $size"
     }
     p += hist(buf.toArray, sizes.length)
+    p.xlabel = xl
+    p.ylabel = yl
     p.title = disc.toString
-    f.saveas(png)
+    f.saveas(sn)
   }
   
   private def getDist(t: DistType.Value) = {
     val df = new DistributionFactory
     df.createDist(t)
+  }
+
+  private def getHistory(t: PeriodType.Value) = {
+    val pf = new PeriodFactory
+    val ps = pf.createPeriod(t)
+    ps.getAllHistory
   }
   
 }

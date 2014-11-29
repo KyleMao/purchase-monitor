@@ -48,4 +48,7 @@ abstract class PeriodStats {
   def getMax: Int
 
   def getMin: Int
+
+  def getAllHistory: Array[Double]
+
 }

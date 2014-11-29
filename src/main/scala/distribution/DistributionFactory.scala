@@ -3,7 +3,7 @@ package distribution
 import types.DistType
 
 /**
- * A factory that creates the distribution objects
+ * A factory that creates the distribution objects.
  * 
  * @author Zexi Mao
  *

@@ -2,6 +2,8 @@ package utils
 
 import com.typesafe.config.ConfigFactory
 
+import types.PeriodType
+
 /**
  * A configuration reader that reads in configurations from a conf file.
  * 
@@ -27,4 +29,10 @@ class ConfigReader {
 
   def getNCluster = 
     conf.getInt("cluster.numCluster")
+
+  def getBinNum(t: PeriodType.Value) = {
+    val pStr = Utils.periodStr(t)
+    conf.getInt(s"binNum.$pStr")
+  }
+
 }
