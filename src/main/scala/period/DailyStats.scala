@@ -1,5 +1,7 @@
 package period
 
+import java.util.Date
+
 import types.AggreType
 import types.PeriodType
 
@@ -10,6 +12,10 @@ import types.PeriodType
  *
  */
 class DailyStats extends PeriodStats {
+
+  def getPurchase(d: Date) = {
+    super.getPeriodPurchase(d, PeriodType.Day)
+  }
 
   def getAvg: Float =
     getAggreStat(AggreType.Avg)

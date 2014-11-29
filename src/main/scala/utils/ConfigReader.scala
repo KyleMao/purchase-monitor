@@ -35,4 +35,10 @@ class ConfigReader {
     conf.getInt(s"binNum.$pStr")
   }
 
+  def getDailyInter = {
+    val cc = conf.getInt("dailyNum.confCoeff")
+    val pref = s"dailyNum.interval_${cc}."
+    (conf.getInt(s"${pref}low"), conf.getInt(s"${pref}high"))
+  }
+
 }

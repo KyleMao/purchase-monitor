@@ -11,8 +11,11 @@ import java.util.Date
  */
 class TimeManager {
 
-  def getTime(t: String) =
-    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(t)
+  def getTime(s: String) =
+    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(s)
+
+  def getInputDate(s: String) =
+    new SimpleDateFormat("yyyy-MM-dd").parse(s)
 
   def getDbStartTime = {
     val cr = new ConfigReader
@@ -33,6 +36,9 @@ class TimeManager {
 
   def getDayAfter(d: Date, n: Int) =
     new Date(d.getTime + n * msPerDay)
+
+  def dateToStr(d: Date) =
+    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(d)
 
   def weekDiff(d1: Date, d2: Date) =
     dateDiff(d1, d2) / 7

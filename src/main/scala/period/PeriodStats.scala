@@ -1,11 +1,13 @@
 package period
 
 import scala.collection.mutable.ArrayBuffer
+import java.util.Date
 
 import types.AggreType
 import types.PeriodType
 import utils.ConfigReader
 import utils.DbManager
+import utils.TimeManager
 import utils.Utils
 
 /**
@@ -18,6 +20,17 @@ abstract class PeriodStats {
   private val dbm = new DbManager
   private val cr = new ConfigReader
   private val tbl = cr.getTbl
+
+  protected def getPeriodPurchase(d: Date, pt: PeriodType.Value) = {
+    val tm = new TimeManager
+    val tStr = tm.dateToStr(d)
+    val pStr = Utils.periodStr(pt)
+    val query = s"""SELECT count(distinct purchase_id) as p_num FROM
+      purchase_history WHERE date_trunc('$pStr', time)='$tStr'"""
+    val res = dbm.executeQuery(query)
+    res.next
+    res.getInt("p_num")
+  }
 
   protected def getAllHistory(pt: PeriodType.Value): Array[Double] = {
     val pStr = Utils.periodStr(pt)
