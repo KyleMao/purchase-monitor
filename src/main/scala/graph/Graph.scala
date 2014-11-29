@@ -35,6 +35,19 @@ class Graph {
     f.saveas(sn)
   }
 
+  def plotPeriodHistory(t: PeriodType.Value) = {
+    val y = getHistory(t)
+    val x = linspace(1, y.length, y.length)
+    val f = Figure()
+    val p = f.subplot(0)
+    p += plot(x, y)
+    val (xl, yl, tt, sn) = lh.plotPeriodHelper(t, gd)
+    p.xlabel = xl
+    p.ylabel = yl
+    p.title = tt
+    f.saveas(sn)
+  }
+
   def plotHistory(t: DistType.Value, id: String) = {
     val dist = getDist(t)
     val y = dist.getWeeklyHistory(id)

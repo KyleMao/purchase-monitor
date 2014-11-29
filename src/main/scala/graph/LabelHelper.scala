@@ -90,4 +90,13 @@ class LabelHelper {
     (xl, yl, tt, sn)
   }
 
+  def plotPeriodHelper(t: PeriodType.Value, gd: String) = {
+    val pStr = Utils.periodStr(t)
+    val xl = pStr
+    val yl = "# of purchases"
+    val tt = "Purchase Number History"
+    val sn = gd + s"${pStr}_history.png"
+    (xl, yl, tt, sn)
+  }
+
 }
