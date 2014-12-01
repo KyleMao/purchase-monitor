@@ -16,18 +16,31 @@ import utils.TimeManager
  */
 class Monitor {
 
-  def isAbnormal(ds: String) = {
+  def isAbnormal(ds: String): Unit = {
     val tm = new TimeManager
+    if (!tm.isDateValid(ds)) {
+      println("Invalid date format!")
+      return
+    }
+
     val d = tm.getInputDate(ds)
-    val (da, dstr) = dayPurchaseAbnormal(d)
-    val (ma, mstr) = minutePurchaseAbnormal(d)
-    if (!da && !ma)
-      println("No anomaly detected.")
-    else {
-      if (da)
-        println(dstr)
-      if (ma)
-        mstr.foreach(println)
+    val begin = tm.getDbStartTime
+    val end = tm.getLastDay
+    
+    if ((tm.dateDiff(begin, d) >= 0) && ((tm.dateDiff(d, end) >= 0))) {
+      val (da, dstr) = dayPurchaseAbnormal(d)
+      val (ma, mstr) = minutePurchaseAbnormal(d)
+      if (!da && !ma) {
+        println("No anomaly detected.")
+      }
+      else {
+        if (da)
+          println(dstr)
+        if (ma)
+          mstr.foreach(println)
+      }
+    } else {
+      println("Date out of range!")
     }
   }
 

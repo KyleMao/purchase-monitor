@@ -8,6 +8,7 @@ import nak.cluster._
 import types.AggreType
 import types.AmountType
 import types.ObjType
+import types.PeriodType
 import utils.ConfigReader
 import utils.DbManager
 import utils.TimeManager
@@ -20,7 +21,6 @@ import utils.Utils
  *
  */
 abstract class Distribution {
-  private val dbm = new DbManager
   private val cr = new ConfigReader
   private val tbl = cr.getTbl
 
@@ -33,7 +33,7 @@ abstract class Distribution {
     val query = s"""SELECT $func(g_sum) FROM
       (SELECT $group, $sum AS g_sum FROM $tbl GROUP BY $group)
       AS group_count;"""
-    val res = dbm.executeQuery(query)
+    val res = DbManager.executeQuery(query)
     res.next()
     res.getFloat(func)
   }
@@ -41,7 +41,7 @@ abstract class Distribution {
   protected def getDistinctNum(ot: ObjType.Value) = {
     val group = Utils.groupStr(ot)
     val query = s"SELECT count(distinct $group) AS d_num FROM $tbl;"
-    val res = dbm.executeQuery(query)
+    val res = DbManager.executeQuery(query)
     res.next()
     res.getInt("d_num")
   }
@@ -51,7 +51,7 @@ abstract class Distribution {
     val sum = Utils.sumStr(amt)
     val query = s"""SELECT $group, $sum AS g_sum FROM $tbl
       GROUP BY $group ORDER BY g_sum DESC;"""
-    val res = dbm.executeQuery(query)
+    val res = DbManager.executeQuery(query)
     val buf = ArrayBuffer.empty[Double]
     while (res.next()) {
       buf += res.getInt("g_sum")
@@ -100,10 +100,11 @@ abstract class Distribution {
     val group = Utils.groupStr(ot)
     val sum = Utils.sumStr(amt)
     val tm = new TimeManager
-    val query = s"""SELECT $group, date_trunc('week', time) AS week,
+    val wstr = Utils.periodStr(PeriodType.Week)
+    val query = s"""SELECT $group, date_trunc('$wstr', time) AS week,
       $sum AS g_sum FROM $tbl WHERE $group='$id' GROUP BY $group, week
       ORDER BY week;"""
-    val res = dbm.executeQuery(query)
+    val res = DbManager.executeQuery(query)
     val amount = ArrayBuffer.empty[Double]
     var preWeek = tm.getPrevWeek(tm.getDbStartTime)
     
@@ -123,6 +124,13 @@ abstract class Distribution {
     amount.toArray
   }
 
+  protected def isObjectPresent(id: String, ot: ObjType.Value) = {
+    val group = Utils.groupStr(ot)
+    val query = s"SELECT * FROM $tbl WHERE $group='$id'"
+    val res = DbManager.executeQuery(query)
+    if (res.next()) true else false
+  }
+
   def getAvg: Float
 
   def getMin: Int
@@ -138,5 +146,7 @@ abstract class Distribution {
   def getKmeansRange(nCluster: Int): (Array[Int], Array[Int])
 
   def getWeeklyHistory(id: String): Array[Double]
+
+  def isObjectPresent(id: String): Boolean
 
 }

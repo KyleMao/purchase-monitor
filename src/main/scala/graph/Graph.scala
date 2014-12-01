@@ -50,16 +50,18 @@ class Graph {
 
   def plotHistory(t: DistType.Value, id: String) = {
     val dist = getDist(t)
-    val y = dist.getWeeklyHistory(id)
-    val x = linspace(1, y.length, y.length)
-    val f = Figure()
-    val p = f.subplot(0)
-    p += plot(x, y)
-    val (xl, yl, tt, sn) = lh.plotHistoryHelper(t, gd, id)
-    p.xlabel = xl
-    p.ylabel = yl
-    p.title = tt
-    f.saveas(sn)
+    if (dist.isObjectPresent(id)) {
+      val y = dist.getWeeklyHistory(id)
+      val x = linspace(1, y.length, y.length)
+      val f = Figure()
+      val p = f.subplot(0)
+      p += plot(x, y)
+      val (xl, yl, tt, sn) = lh.plotHistoryHelper(t, gd, id)
+      p.xlabel = xl
+      p.ylabel = yl
+      p.title = tt
+      f.saveas(sn)
+    } else println(s"Invalid identifier!")
   }
 
   def drawHist(t: PeriodType.Value) = {
@@ -75,9 +77,11 @@ class Graph {
   }
 
   def drawClusterHist(t: DistType.Value, nCluster: Int) = {
-    val dist = getDist(t)
-    val (bins, sizes) = dist.getKmeansRange(nCluster)
-    drawHist(t, bins, sizes)
+    if ((nCluster >= 3) && (nCluster <= 9)) {
+      val dist = getDist(t)
+      val (bins, sizes) = dist.getKmeansRange(nCluster)
+      drawHist(t, bins, sizes)
+    } else println("Invalid number of clusters!")
   }
 
   def drawClusterHist(t: DistType.Value) = {

@@ -20,7 +20,6 @@ class MinutelyStats extends PeriodStats {
 
   def getAbnormalMinute(d: Date) = {
     val cr = new ConfigReader
-    val dm = new DbManager
     val tm = new TimeManager
     val tbl = cr.getTbl
     val upper = cr.getMinuteUpper
@@ -31,7 +30,7 @@ class MinutelyStats extends PeriodStats {
       (SELECT date_trunc('$mStr', time) AS m, count(distinct purchase_id) AS c
       FROM $tbl GROUP BY m) AS t WHERE
       date_trunc('$dStr', m)='$date' AND c > $upper ORDER BY m;"""
-    val res = dm.executeQuery(query)
+    val res = DbManager.executeQuery(query)
     val ml = new ListBuffer[(String, Int)]
     if (res.next()) {
       val min = res.getString("m")
@@ -60,14 +59,13 @@ class MinutelyStats extends PeriodStats {
 
   private def dupPurchase(min: String, cnt: Int) = {
     val cr = new ConfigReader
-    val dm = new DbManager
     val tbl = cr.getTbl
     val mStr = Utils.periodStr(PeriodType.Min)
     val query = s"""SELECT count(*) AS c FROM
       (SELECT distinct * FROM
       (SELECT user_id, product, quantity, date_trunc('$mStr', time) AS m FROM $tbl)
       AS t where m='$min') as t2;"""
-    val res = dm.executeQuery(query)
+    val res = DbManager.executeQuery(query)
     res.next()
     val distinct = res.getInt("c")
     cnt != distinct

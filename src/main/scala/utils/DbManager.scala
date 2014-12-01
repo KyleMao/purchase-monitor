@@ -8,7 +8,7 @@ import java.sql.DriverManager
  * @author Zexi Mao
  *
  */
-class DbManager {
+object DbManager {
   
   Class.forName("org.postgresql.Driver").newInstance
   private val cr = new ConfigReader

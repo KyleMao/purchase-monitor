@@ -35,6 +35,9 @@ final class ProductQuantityDistribution extends QuantityDistribution {
   def getWeeklyHistory(id: String): Array[Double] = 
     super.getWeeklyHistory(id, ObjType.Product)
 
+  def isObjectPresent(id: String) =
+    super.isObjectPresent(id, ObjType.Product)
+
   private def getAggreStat(agt: AggreType.Value): Float =
     super.getAggreStat(agt, ObjType.Product)
 

@@ -32,8 +32,11 @@ final class ProductPurchaseDistribution extends PurchaseDistribution {
   def getKmeansRange(nCluster: Int): (Array[Int], Array[Int]) =
     super.getKmeansRange(ObjType.Product, nCluster)
 
-  def getWeeklyHistory(id: String): Array[Double] = 
+  def getWeeklyHistory(id: String): Array[Double] =
     super.getWeeklyHistory(id, ObjType.Product)
+
+  def isObjectPresent(id: String) =
+    super.isObjectPresent(id, ObjType.Product)
 
   private def getAggreStat(agt: AggreType.Value): Float =
     super.getAggreStat(agt, ObjType.Product)

@@ -3,6 +3,8 @@ package utils
 import java.text.SimpleDateFormat
 import java.util.Date
 
+import types.PeriodType
+
 /**
  * A class for dealing with time such as parsing and comparing.
  * 
@@ -14,6 +16,17 @@ class TimeManager {
   def getTime(s: String) =
     new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(s)
 
+  def isDateValid(s: String) = {
+    try {
+      val sdf = new SimpleDateFormat("yyyy-MM-dd")
+      sdf.setLenient(false)
+      sdf.parse(s)
+      true
+    } catch {
+      case e: Exception => false
+    }
+  }
+
   def getInputDate(s: String) =
     new SimpleDateFormat("yyyy-MM-dd").parse(s)
 
@@ -23,9 +36,20 @@ class TimeManager {
   }
 
   def getLatestPur = {
-    val dbm = new DbManager
-    val query = "SELECT max(time) as late FROM order_history;"
-    val res = dbm.executeQuery(query)
+    val cr = new ConfigReader
+    val tbl = cr.getTbl
+    val query = s"SELECT max(time) as late FROM $tbl;"
+    val res = DbManager.executeQuery(query)
+    res.next()
+    getTime(res.getString("late"))
+  }
+
+  def getLastDay = {
+    val cr = new ConfigReader
+    val tbl = cr.getTbl
+    val dstr = Utils.periodStr(PeriodType.Day)
+    val query = s"SELECT max(date_trunc('$dstr', time)) as late FROM $tbl;"
+    val res = DbManager.executeQuery(query)
     res.next()
     getTime(res.getString("late"))
   }
@@ -46,6 +70,6 @@ class TimeManager {
   def dateDiff(d1: Date, d2: Date) =
     (d2.getTime - d1.getTime) / msPerDay
 
-  def msPerDay = 24 * 60 * 60 * 1000
+  private def msPerDay = 24 * 60 * 60 * 1000
 
 }

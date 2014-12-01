@@ -17,7 +17,6 @@ import utils.Utils
  *
  */
 abstract class PeriodStats {
-  private val dbm = new DbManager
   private val cr = new ConfigReader
   private val tbl = cr.getTbl
 
@@ -26,8 +25,8 @@ abstract class PeriodStats {
     val tStr = tm.dateToStr(d)
     val pStr = Utils.periodStr(pt)
     val query = s"""SELECT count(distinct purchase_id) as p_num FROM
-      purchase_history WHERE date_trunc('$pStr', time)='$tStr'"""
-    val res = dbm.executeQuery(query)
+      $tbl WHERE date_trunc('$pStr', time)='$tStr'"""
+    val res = DbManager.executeQuery(query)
     res.next()
     res.getInt("p_num")
   }
@@ -37,7 +36,7 @@ abstract class PeriodStats {
     val query = s"""SELECT date_trunc('$pStr', time) as period,
       count(distinct purchase_id) as p_num FROM $tbl GROUP BY period
       ORDER BY period;"""
-    val res = dbm.executeQuery(query)
+    val res = DbManager.executeQuery(query)
     val buf = ArrayBuffer.empty[Double]
     while (res.next()) {
       buf += res.getInt("p_num")
@@ -51,7 +50,7 @@ abstract class PeriodStats {
     val query = s"""SELECT $func(p_num) FROM
       (SELECT date_trunc('$pStr', time) as period, count(distinct purchase_id)
       as p_num FROM $tbl GROUP BY period) AS daily;"""
-    val res = dbm.executeQuery(query)
+    val res = DbManager.executeQuery(query)
     res.next()
     res.getFloat(func)
   }

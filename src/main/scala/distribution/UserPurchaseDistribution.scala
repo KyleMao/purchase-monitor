@@ -35,6 +35,9 @@ final class UserPurchaseDistribution extends PurchaseDistribution {
   def getWeeklyHistory(id: String): Array[Double] = 
     super.getWeeklyHistory(id, ObjType.User)
 
+  def isObjectPresent(id: String) =
+    super.isObjectPresent(id, ObjType.User)
+
   private def getAggreStat(agt: AggreType.Value): Float =
     super.getAggreStat(agt, ObjType.User)
 
