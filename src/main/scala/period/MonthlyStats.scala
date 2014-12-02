@@ -3,12 +3,10 @@ package period
 import types.AggreType
 import types.PeriodType
 
-/**
- * A class that gets the monthly purchase stats.
- * 
- * @author Zexi Mao
- *
- */
+/** A class that gets the monthly purchase stats.
+  *
+  * @author Zexi Mao
+  */
 class MonthlyStats extends PeriodStats {
 
   def getAvg: Float =

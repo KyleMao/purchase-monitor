@@ -8,12 +8,10 @@ import period.DailyStats
 import utils.ConfigReader
 import utils.TimeManager
 
-/**
- * An abstract class that implements the daily purchase monitor.
- * 
- * @author Zexi Mao
- *
- */
+/** A class that implements the daily purchase monitor.
+  *
+  * @author Zexi Mao
+  */
 class Monitor {
 
   def isAbnormal(ds: String): Unit = {

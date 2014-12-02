@@ -3,12 +3,10 @@ package distribution
 import types.AggreType
 import types.ObjType
 
-/**
- * A class for getting the distribution of number purchases of users.
- * 
- * @author Zexi Mao
- *
- */
+/** A class for getting the distribution of number purchases of users.
+  *
+  * @author Zexi Mao
+  */
 final class UserPurchaseDistribution extends PurchaseDistribution {
   
   def getAvg: Float =

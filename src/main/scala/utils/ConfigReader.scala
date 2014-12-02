@@ -4,12 +4,10 @@ import com.typesafe.config.ConfigFactory
 
 import types.PeriodType
 
-/**
- * A configuration reader that reads in configurations from a conf file.
- * 
- * @author Zexi Mao
- *
- */
+/** A configuration reader that reads in configurations from a conf file.
+  *
+  * @author Zexi Mao
+  */
 class ConfigReader {
   val conf = ConfigFactory.load()
 

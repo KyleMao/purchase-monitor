@@ -10,12 +10,10 @@ import utils.DbManager
 import utils.TimeManager
 import utils.Utils
 
-/**
- * An abstract class that gets the purchase stats of a period of time.
- * 
- * @author Zexi Mao
- *
- */
+/** An abstract class that gets the purchase stats of a period of time.
+  *
+  * @author Zexi Mao
+  */
 abstract class PeriodStats {
   private val cr = new ConfigReader
   private val tbl = cr.getTbl

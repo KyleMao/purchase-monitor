@@ -11,12 +11,10 @@ import period.PeriodFactory
 import types.DistType
 import types.PeriodType
 
-/**
- * An class that implements the graph drawing methods.
- * 
- * @author Zexi Mao
- *
- */
+/** An class that implements the graph drawing methods.
+  * 
+  * @author Zexi Mao
+  */
 class Graph {
   val cr = new ConfigReader
   val gd = cr.getGraphDir

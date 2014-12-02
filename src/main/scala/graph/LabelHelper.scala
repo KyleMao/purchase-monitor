@@ -4,12 +4,10 @@ import types.DistType
 import types.PeriodType
 import utils.Utils
 
-/**
- * An class that implements the graph utility methods.
- * 
- * @author Zexi Mao
- *
- */
+/** An class that implements the graph utility methods.
+  *
+  * @author Zexi Mao
+  */
 class LabelHelper {
 
   def plotDistHelper(t: DistType.Value, gd: String) = t match {

@@ -10,12 +10,10 @@ import utils.DbManager
 import utils.TimeManager
 import utils.Utils
 
-/**
- * A class that gets the minutely purchase stats.
- * 
- * @author Zexi Mao
- *
- */
+/** A class that gets the minutely purchase stats.
+  *
+  * @author Zexi Mao
+  */
 class MinutelyStats extends PeriodStats {
 
   def getAbnormalMinute(d: Date) = {

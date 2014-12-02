@@ -2,12 +2,10 @@ package utils
 
 import java.sql.DriverManager
 
-/**
- * A database manager that deals with the database queries.
- * 
- * @author Zexi Mao
- *
- */
+/** A singleton database manager that deals with the database queries.
+  *
+  * @author Zexi Mao
+  */
 object DbManager {
   
   Class.forName("org.postgresql.Driver").newInstance

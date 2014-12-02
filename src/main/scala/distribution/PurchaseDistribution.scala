@@ -4,12 +4,10 @@ import types.AggreType
 import types.AmountType
 import types.ObjType
 
-/**
- * An abstract class dealing with the distribution of purchases.
- * 
- * @author Zexi Mao
- *
- */
+/** An abstract class dealing with the distribution of purchases.
+  *
+  * @author Zexi Mao
+  */
 abstract class PurchaseDistribution extends Distribution {
   
   protected def getAggreStat(agt: AggreType.Value, ot: ObjType.Value): Float =

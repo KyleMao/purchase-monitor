@@ -2,12 +2,10 @@ package period
 
 import types.PeriodType
 
-/**
- * A factory that creates the period stats objects
- * 
- * @author Zexi Mao
- *
- */
+/** A factory that creates the period stats objects
+  *
+  * @author Zexi Mao
+  */
 class PeriodFactory {
     
   def createPeriod(t: PeriodType.Value) = t match {

@@ -14,16 +14,15 @@ import utils.DbManager
 import utils.TimeManager
 import utils.Utils
 
-/**
- * An abstract class that implements the general distribution methods.
- * 
- * @author Zexi Mao
- *
- */
+/** An abstract class that implements the general distribution methods.
+  * 
+  * @author Zexi Mao
+  */
 abstract class Distribution {
   private val cr = new ConfigReader
   private val tbl = cr.getTbl
 
+  // Returns the average, min or max of the amount of object.
   protected def getAggreStat(agt: AggreType.Value, ot: ObjType.Value,
     amt: AmountType.Value): Float = {
 
@@ -38,7 +37,9 @@ abstract class Distribution {
     res.getFloat(func)
   }
 
-  protected def getDistinctNum(ot: ObjType.Value) = {
+  // Returns the distinct number of objects (product or user) in the
+  // database.
+  protected def getDistinctNum(ot: ObjType.Value): Int = {
     val group = Utils.groupStr(ot)
     val query = s"SELECT count(distinct $group) AS d_num FROM $tbl;"
     val res = DbManager.executeQuery(query)
@@ -46,7 +47,10 @@ abstract class Distribution {
     res.getInt("d_num")
   }
 
-  protected def getCnts(ot: ObjType.Value, amt: AmountType.Value) = {
+  // Returns an Array for the amount of objects (products or users).
+  protected def getCnts(ot: ObjType.Value, amt: AmountType.Value)
+    : Array[Double] = {
+
     val group = Utils.groupStr(ot)
     val sum = Utils.sumStr(amt)
     val query = s"""SELECT $group, $sum AS g_sum FROM $tbl
@@ -59,13 +63,17 @@ abstract class Distribution {
     buf.toArray
   }
 
+  // A wrapper method that does k-means clustering for objects (products or
+  // users) and returns the range and number of samples in each cluster.
   protected def getKmeansRange(ot: ObjType.Value, amt: AmountType.Value):
     (Array[Int], Array[Int]) = {
+
     val cr = new ConfigReader
     val nCluster = cr.getNCluster
     getKmeansRange(ot, amt, nCluster)
   }
 
+  // Actual k-means method.
   protected def getKmeansRange(ot: ObjType.Value, amt: AmountType.Value,
     nCluster: Int): (Array[Int], Array[Int]) = {
     
@@ -94,6 +102,8 @@ abstract class Distribution {
     (bins, sizes)
   }
 
+  // Returns an array of number of weekly purhcases for each object (product
+  // or user).
   protected def getWeeklyHistory(id: String, ot: ObjType.Value,
     amt: AmountType.Value): Array[Double] = {
 
@@ -124,7 +134,8 @@ abstract class Distribution {
     amount.toArray
   }
 
-  protected def isObjectPresent(id: String, ot: ObjType.Value) = {
+  // Check whether an object (product or user) is present in the database.
+  protected def isObjectPresent(id: String, ot: ObjType.Value): Boolean = {
     val group = Utils.groupStr(ot)
     val query = s"SELECT * FROM $tbl WHERE $group='$id'"
     val res = DbManager.executeQuery(query)

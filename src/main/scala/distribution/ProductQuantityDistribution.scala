@@ -3,12 +3,10 @@ package distribution
 import types.AggreType
 import types.ObjType
 
-/**
- * A class for getting the distribution of products quantities purchased.
- * 
- * @author Zexi Mao
- *
- */
+/** A class for getting the distribution of product quantities purchased.
+  *
+  * @author Zexi Mao
+  */
 final class ProductQuantityDistribution extends QuantityDistribution {
   
   def getAvg: Float =

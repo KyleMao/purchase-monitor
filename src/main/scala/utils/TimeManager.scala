@@ -5,12 +5,10 @@ import java.util.Date
 
 import types.PeriodType
 
-/**
- * A class for dealing with time such as parsing and comparing.
- * 
- * @author Zexi Mao
- *
- */
+/** A class for dealing with time such as parsing and comparing.
+  *
+  * @author Zexi Mao
+  */
 class TimeManager {
 
   def getTime(s: String) =

@@ -5,12 +5,10 @@ import types.AmountType
 import types.ObjType
 import types.PeriodType
 
-/**
- * An object that holds the miscellaneous utility methods.
- * 
- * @author Zexi Mao
- *
- */
+/** An object that holds the miscellaneous utility methods.
+  *
+  * @author Zexi Mao
+  */
 object Utils {
   
   def funcStr(agt: AggreType.Value) = agt match {

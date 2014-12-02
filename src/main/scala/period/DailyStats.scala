@@ -5,12 +5,10 @@ import java.util.Date
 import types.AggreType
 import types.PeriodType
 
-/**
- * A class that gets the daily purchase stats.
- * 
- * @author Zexi Mao
- *
- */
+/** A class that gets the daily purchase stats.
+  *
+  * @author Zexi Mao
+  */
 class DailyStats extends PeriodStats {
 
   def getPurchase(d: Date) =
