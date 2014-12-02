@@ -22,7 +22,8 @@ abstract class Distribution {
   private val cr = new ConfigReader
   private val tbl = cr.getTbl
 
-  // Returns the average, min or max of the amount of object.
+  /* Returns the average, min or max of the amount of object.
+   */
   protected def getAggreStat(agt: AggreType.Value, ot: ObjType.Value,
     amt: AmountType.Value): Float = {
 
@@ -37,8 +38,9 @@ abstract class Distribution {
     res.getFloat(func)
   }
 
-  // Returns the distinct number of objects (product or user) in the
-  // database.
+  /* Returns the distinct number of objects (product or user) in the
+   * database.
+   */
   protected def getDistinctNum(ot: ObjType.Value): Int = {
     val group = Utils.groupStr(ot)
     val query = s"SELECT count(distinct $group) AS d_num FROM $tbl;"
@@ -47,7 +49,8 @@ abstract class Distribution {
     res.getInt("d_num")
   }
 
-  // Returns an Array for the amount of objects (products or users).
+  /* Returns an Array for the amount of objects (products or users).
+   */
   protected def getCnts(ot: ObjType.Value, amt: AmountType.Value)
     : Array[Double] = {
 
@@ -63,8 +66,9 @@ abstract class Distribution {
     buf.toArray
   }
 
-  // A wrapper method that does k-means clustering for objects (products or
-  // users) and returns the range and number of samples in each cluster.
+  /* A wrapper method that does k-means clustering for objects (products or
+   * users) and returns the range and number of samples in each cluster.
+   */
   protected def getKmeansRange(ot: ObjType.Value, amt: AmountType.Value):
     (Array[Int], Array[Int]) = {
 
@@ -73,7 +77,8 @@ abstract class Distribution {
     getKmeansRange(ot, amt, nCluster)
   }
 
-  // Actual k-means method.
+  /* Actual k-means method.
+   */
   protected def getKmeansRange(ot: ObjType.Value, amt: AmountType.Value,
     nCluster: Int): (Array[Int], Array[Int]) = {
     
@@ -102,8 +107,9 @@ abstract class Distribution {
     (bins, sizes)
   }
 
-  // Returns an array of number of weekly purhcases for each object (product
-  // or user).
+  /* Returns an array of number of weekly purhcases for each object (product
+   * or user).
+   */
   protected def getWeeklyHistory(id: String, ot: ObjType.Value,
     amt: AmountType.Value): Array[Double] = {
 
@@ -134,7 +140,8 @@ abstract class Distribution {
     amount.toArray
   }
 
-  // Check whether an object (product or user) is present in the database.
+  /* Check whether an object (product or user) is present in the database.
+   */
   protected def isObjectPresent(id: String, ot: ObjType.Value): Boolean = {
     val group = Utils.groupStr(ot)
     val query = s"SELECT * FROM $tbl WHERE $group='$id'"
@@ -142,22 +149,42 @@ abstract class Distribution {
     if (res.next()) true else false
   }
 
+  /** Returns the average number.
+    */
   def getAvg: Float
 
+  /** Returns the minimum number.
+    */
   def getMin: Int
 
+  /** Returns the maximum number.
+    */
   def getMax: Int
 
+  /** Returns the number of distinct objects (products or users) in database.
+    */
   def getDistinctNum: Int
 
+  /** Returns an array of the amount of objects (products or users).
+    */
   def getCnts: Array[Double]
 
+  /** Returns the range and number of samples in each cluster with the default
+    * number of clusters.
+    */
   def getKmeansRange: (Array[Int], Array[Int])
 
+  /** Returns the range and number of samples in each cluster
+    */
   def getKmeansRange(nCluster: Int): (Array[Int], Array[Int])
 
+  /** Returns an array of number of weekly purhcases for each object (product
+    * or user).
+    */
   def getWeeklyHistory(id: String): Array[Double]
 
+  /** Checks whether an object (product or user) is in the database.
+    */
   def isObjectPresent(id: String): Boolean
 
 }

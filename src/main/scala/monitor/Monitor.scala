@@ -8,12 +8,15 @@ import period.DailyStats
 import utils.ConfigReader
 import utils.TimeManager
 
-/** A class that implements the daily purchase monitor.
+/** A daily purchase monitor.
   *
   * @author Zexi Mao
   */
 class Monitor {
 
+  /** Checks whether the given date has abnormal purchases and prints out the
+    * findings if any.
+    */
   def isAbnormal(ds: String): Unit = {
     val tm = new TimeManager
     if (!tm.isDateValid(ds)) {
@@ -42,7 +45,9 @@ class Monitor {
     }
   }
 
-  def dayPurchaseAbnormal(d: Date): (Boolean, String) = {
+  /* Checks whether the daily purchase number is abnormal
+   */
+  private def dayPurchaseAbnormal(d: Date): (Boolean, String) = {
     val cr = new ConfigReader
     val (low, high) = cr.getDailyInter
     val ds = new DailyStats
@@ -53,7 +58,9 @@ class Monitor {
       (false, "")
   }
 
-  def minutePurchaseAbnormal(d: Date): (Boolean, Array[String]) = {
+  /* Checks whether purchase number in each minute is abnormal.
+   */
+  private def minutePurchaseAbnormal(d: Date): (Boolean, Array[String]) = {
     val ms = new MinutelyStats
     val al = ms.getAbnormalMinute(d)
     val ra = ArrayBuffer.empty[String]
