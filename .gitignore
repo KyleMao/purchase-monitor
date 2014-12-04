@@ -22,3 +22,4 @@ project/plugins/project/
 
 # Project specific
 src/main/scala/Test.scala
+src/main/resources/sample_user_purchases.txt
